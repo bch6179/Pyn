@@ -1,0 +1,22 @@
+﻿1. D&D BUILD from previous   by recuding one by one- inserting {} by cut and concatenate : 
+    duplicate things not effecient
+#Mistake ((()())) can get from inserting () into ((())), and also insert to the front of p 
+
+Why backtracking . ..only two options for each location recursively or maybe prune
+(()()) -> have to insert to two locations at the same time 
+...(I don't know, which prevent me for this solution
+... maybe can get from other set
+//DFS tree
+//     (
+//   (    )
+// )  )  ( 
+first
+
+
+Inline-style: 
+
+
+
+
+Avoid by build from scratch, add left and right parens asif valid expression:
+Start by asking question what's a valid:  dfs

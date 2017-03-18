@@ -1,0 +1,12 @@
+﻿
+Not to use sth you see before like reverse argu to call again, but analyze what scnarios it covers by literally enumerating digits and . (0 ,1,2.. number of)
+and what kind of method available and achieve what performance for the goal
+
+Method 1: This code assumes that next level is zero if no mo levels in shorter version number. And than compare levels.
+
+
+when you doing in string , consider leading 0; but not the case after atoi
+which makes harder to do reverse argu because you need to remove the 0
+Although could avoid '.' handling but 
+Noe '1' -'0': TypeError: unsupported operand type(s) for -: 'str' and 'str' 
+org 

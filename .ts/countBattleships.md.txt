@@ -1,0 +1,2 @@
+﻿Count the first cell of each battleship;
+while brute forcing the idea, abstract one more level or in the other direction, what makes not a ship, if greedy for each cell, only those not touching X is valid for the number of ships

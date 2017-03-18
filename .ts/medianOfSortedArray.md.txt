@@ -1,0 +1,15 @@
+﻿decrease and conquer  log(m+n), every time call getkth can reduce the scale k to its half
+ recursively: getKth 
+  even  getKth
+  odd   getKth + getKth /2.0
+ iteration:  invariants:
+     split two halfs and merge left and right
+     edge elements less than another 
+      while i min < i max (m)
+          adjust imin imax based on the property
+           imin = i+1
+       else 
+       imax = i+1
+
+       else
+       : get result from A[i] B[j]

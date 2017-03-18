@@ -1,0 +1,4 @@
+﻿1.#Mistake  not consider upper cases
+
+you already swap ,why again #str[end], str[start] = str[start] , str[end]     str[start] , str[end] = swap(str[start] , str[end])
+

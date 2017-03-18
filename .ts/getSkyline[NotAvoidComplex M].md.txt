@@ -1,0 +1,40 @@
+﻿#[Note]
+#=====
+
+change comparason problem to a search problem:
+instead of o(n^2) comparason based on the box, critical point as a, search for the max hight among the active sets, which if implemented by heap, no longer o(n)
+
+1.   based on active sets of box- not easy to understand; add begin lines to skyline first; not to pop end lines until next not shaded comes in or the last one; this way we can explicitly handle the edge cases like starting at the same start, ending at the same end; checked house iteratively by saviging critical points and liveHR which contains shade coverage by R
+#2. converted to edges , prefererd, when end edge occurs, remove the start edge from queue immediately;
+#check the converted edges case iteratively after sorting carefully for the edge cases, and handle it based on start or end. if start, heappush it, and add to skyline only if start hight greater than the top in the heap.If end, remove from the heap, add to skyline the next highest point or 0 if non left. the first ones always added to skyline.
+#3. OO maxheap method, feed the maxheap with the converted points, get the maxline from maxheap and then compare based on start and end saving to skyline accordingly.
+#4 D&D
+=======================Reference=============
+https://briangordon.github.io/2014/08/the-skyline-problem.html
+now that we’re able to scan through the critical points and consider only the “active” set of rectangles at each critical point, an interesting opportunity presents itself. Our current solution can be written as:
+for each critical point c
+    c.y gets the height of the tallest rectangle over c
+This is no longer obviously O(n2)O(n2). If we can somehow calculate the height of the tallest rectangle over c in faster than O(n)O(n) time, we have beaten our O(n2)O(n2) algorithm. Fortunately, we know about a data structure which can keep track of an active set of integer-keyed objects and return the highest one in O(logn)O(log⁡n) time: a heap.
+Our final solution, then, in O(nlogn)O(nlog⁡n) time, is as follows. First, sort the critical points. Then scan across the critical points from left to right. When we encounter the left edge of a rectangle, we add that rectangle to the heap with its height as the key. When we encounter the right edge of a rectangle, we remove that rectangle from the heap. (This requires keeping external pointers into the heap.) Finally, any time we encounter a critical point, after updating the heap we set the height of that critical point to the value peeked from the top of the heap.
+#[Note]
+#=====BAD IDEA
+for each rectangle r:
+    for each heightmap cell c starting at r.left and ending at r.right:
+        c gets the max of r.height and the previous value of c
+ 
+
+
+
+
+<h2>Example of code</h2>
+
+<pre>
+    <div class="container">
+        <div class="block two first">
+            <h2>Your title</h2>
+            <div class="wrap">
+            //Your content
+            </div>
+        </div>
+    </div>
+</pre>

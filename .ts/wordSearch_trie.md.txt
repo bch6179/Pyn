@@ -1,0 +1,654 @@
+﻿[Google] Boggle Solver (Search Words From Matrix)
+| COMMENTS
+Question
+link
+Boggle Game:
+F X I E
+A M L O
+E W B X
+A S T U
+The goal of the game is to find as many words as you can that can be formed by chaining letters together. You are given a dictionary of words are reference.
+Solution
+The best solution is to use Trie, then do DFS search.
+The idea is from this answer (however, this guy said his solution does not handle ‘visited’ nodes properly, meaning that same char might be visited again to produce a word).
+We need to first define a class called Item:
+class Item {
+    public final int x, y;
+    public final String prefix;
+public Item(int row, int column, String prefix) {
+    this.x = row;
+    this.y = column;
+    this.prefix = prefix;
+}
+}
+So when we start doing DFS, we pass in an Item object which stores 2 information:
+The next position that we’re going to visit.
+The prefix string that we have validated so far (before visiting this position).
+For example:
+F X I E
+A M L O
+E W B X
+A S T U
+We’ll have Items objects like (0, 0, “”), (0, 1, “F”), (0, 2, “FA”) … We guarantee that the prefix must be a valid prefix by searching them in the Trie.
+How to tell whether a string is a prefix of word, or it’s an actual word? We have a property in TrieNode called TrieNode.isWord() to help us.
+The code I wrote below is based on this Java solution by zouzhile.
+Code
+BoggleSolver.java
+public class BoggleSolver {
+private static BufferedReader in = null;
+private static final String INPUT_FILE = "dictionary.txt";
+
+public static void beginFileReader() {
+    try {
+        in = new BufferedReader(new FileReader(new File(BoggleSolver.class
+                .getResource(INPUT_FILE).toURI())));
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    } catch (URISyntaxException e) {
+        e.printStackTrace();
+    }
+}
+
+private Trie buildTrie() {
+    Trie trie = new Trie();
+    beginFileReader();
+    String line = null;
+    try {
+        while ((line = in.readLine()) != null) {
+            String[] words = line.split(" ");
+            for (String word : words) {
+                word = word.trim().toLowerCase();
+                trie.addWord(word);
+            }
+        }
+        if (in != null) {
+            in.close();
+        }
+    } catch (IOException e1) {
+        e1.printStackTrace();
+    }
+    return trie;
+}
+
+public Set<String> findWords(char[][] map, Trie dict) {
+    Set<String> ans = new TreeSet<String>();
+    int m = map.length;
+    int n = map[0].length;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            boolean[][] visited = new boolean[m][n];
+            findWordsDfs(ans, dict, map, visited, new Item(i, j, ""));
+            // item have 3 parameters:
+            // location x,y and the prefix string before reaching (i.j)
+        }
+    }
+    return ans;
+}
+
+public void findWordsDfs(Set<String> ans, Trie dict, char[][] map,
+        boolean[][] visited, Item item) {
+    // item: the location that we're going to test
+    // item.prefix is the word prefix before reaching (x, y)
+
+    int m = map.length;
+    int n = map[0].length;
+    int x = item.x;
+    int y = item.y;
+
+    // check whether cur.(x,y) is a valid position
+    if (x < 0 || x >= m || y < 0 || y >= n) {
+        return;
+    } else if (visited[x][y]) {
+        return;
+    }
+    String newWord = item.prefix + map[x][y];
+    // check whether cur.prefix is a valid prefix
+    TrieNode findWord = dict.match(newWord);
+    if (findWord == null) {
+        // up to this position (x, y), the word dont' exists
+        return;
+    }
+    // now cur is in a valid position, with a valid prefix
+    if (findWord.isWord()) {
+        ans.add(newWord);
+    }
+    // visit this position, and continue in 4 different directions
+    visited[x][y] = true;
+    findWordsDfs(ans, dict, map, visited, new Item(x, y - 1, newWord));
+    findWordsDfs(ans, dict, map, visited, new Item(x, y + 1, newWord));
+    findWordsDfs(ans, dict, map, visited, new Item(x - 1, y, newWord));
+    findWordsDfs(ans, dict, map, visited, new Item(x + 1, y, newWord));
+    visited[x][y] = false;
+}
+
+public static void main(String[] args) {
+    String[] rows = "eela,elps,weut,korn".split(",");
+    char[][] input = new char[4][4];
+    for (int i = 0; i < 4; i++) {
+        input[i] = rows[i].toCharArray();
+    }
+
+    // prepare test data
+    BoggleSolver solver = new BoggleSolver();
+    Trie dictionary = solver.buildTrie();
+    // start finding words
+    Set<String> set = solver.findWords(input, dictionary);
+    // present the result
+    System.out.println(set.size() + " words are found, they are: ");
+    for (String str : set) {
+        System.out.println(str);
+    }
+}
+
+class Item {
+    public final int x, y;
+    public final String prefix;
+
+    public Item(int row, int column, String prefix) {
+        this.x = row;
+        this.y = column;
+        this.prefix = prefix;
+    }
+}
+}
+Trie.java
+public class Trie {
+    private TrieNode root;
+public Trie() {
+    this.root = new TrieNode();
+}
+
+public void addWord(String word) {
+    TrieNode node = this.root;
+    for (char c : word.toCharArray()) {
+        node = node.addChild(c);
+        if (node == null)
+            return;
+    }
+    node.setWord(true);
+}
+
+public TrieNode match(String s) {
+    TrieNode node = this.root;
+    for (char c : s.toCharArray()) {
+        node = node.get(c);
+        if (node == null)
+            return null;
+    }
+    return node;
+}
+}
+TrieNode.java
+public class TrieNode {
+    private TrieNode[] children;
+    private boolean isWord = false;
+public TrieNode() {
+    this.children = new TrieNode[26];
+}
+
+public TrieNode addChild(char child) {
+    if (child < 'a' || child > 'z')
+        return null;
+
+    int offset = child - 'a';
+    if (this.children[offset] == null) {
+        this.children[offset] = new TrieNode();
+    }
+    return this.children[offset];
+}
+
+public boolean isWord() {
+    return isWord;
+}
+
+public void setWord(boolean isWord) {
+    this.isWord = isWord;
+}
+
+public TrieNode get(char c) {
+    int offset = c - 'a';
+    return this.children[offset];
+}
+}
+Posted by CodeMonkey    q-google, z-string-search
+« [CC150v4] 10.7 Ugly Numbers (Hamming numbers) [Fundamental] A-Star Search  »
+Comments
+ [Google] Boggle Solver (Search Words From Matrix)
+| COMMENTS
+Question
+link
+Boggle Game:
+F X I E
+A M L O
+E W B X
+A S T U
+The goal of the game is to find as many words as you can that can be formed by chaining letters together. You are given a dictionary of words are reference.
+Solution
+The best solution is to use Trie, then do DFS search.
+The idea is from this answer (however, this guy said his solution does not handle ‘visited’ nodes properly, meaning that same char might be visited again to produce a word).
+We need to first define a class called Item:
+class Item {
+    public final int x, y;
+    public final String prefix;
+public Item(int row, int column, String prefix) {
+    this.x = row;
+    this.y = column;
+    this.prefix = prefix;
+}
+}
+So when we start doing DFS, we pass in an Item object which stores 2 information:
+The next position that we’re going to visit.
+The prefix string that we have validated so far (before visiting this position).
+For example:
+F X I E
+A M L O
+E W B X
+A S T U
+We’ll have Items objects like (0, 0, “”), (0, 1, “F”), (0, 2, “FA”) … We guarantee that the prefix must be a valid prefix by searching them in the Trie.
+How to tell whether a string is a prefix of word, or it’s an actual word? We have a property in TrieNode called TrieNode.isWord() to help us.
+The code I wrote below is based on this Java solution by zouzhile.
+Code
+BoggleSolver.java
+public class BoggleSolver {
+private static BufferedReader in = null;
+private static final String INPUT_FILE = "dictionary.txt";
+
+public static void beginFileReader() {
+    try {
+        in = new BufferedReader(new FileReader(new File(BoggleSolver.class
+                .getResource(INPUT_FILE).toURI())));
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    } catch (URISyntaxException e) {
+        e.printStackTrace();
+    }
+}
+
+private Trie buildTrie() {
+    Trie trie = new Trie();
+    beginFileReader();
+    String line = null;
+    try {
+        while ((line = in.readLine()) != null) {
+            String[] words = line.split(" ");
+            for (String word : words) {
+                word = word.trim().toLowerCase();
+                trie.addWord(word);
+            }
+        }
+        if (in != null) {
+            in.close();
+        }
+    } catch (IOException e1) {
+        e1.printStackTrace();
+    }
+    return trie;
+}
+
+public Set<String> findWords(char[][] map, Trie dict) {
+    Set<String> ans = new TreeSet<String>();
+    int m = map.length;
+    int n = map[0].length;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            boolean[][] visited = new boolean[m][n];
+            findWordsDfs(ans, dict, map, visited, new Item(i, j, ""));
+            // item have 3 parameters:
+            // location x,y and the prefix string before reaching (i.j)
+        }
+    }
+    return ans;
+}
+
+public void findWordsDfs(Set<String> ans, Trie dict, char[][] map,
+        boolean[][] visited, Item item) {
+    // item: the location that we're going to test
+    // item.prefix is the word prefix before reaching (x, y)
+
+    int m = map.length;
+    int n = map[0].length;
+    int x = item.x;
+    int y = item.y;
+
+    // check whether cur.(x,y) is a valid position
+    if (x < 0 || x >= m || y < 0 || y >= n) {
+        return;
+    } else if (visited[x][y]) {
+        return;
+    }
+    String newWord = item.prefix + map[x][y];
+    // check whether cur.prefix is a valid prefix
+    TrieNode findWord = dict.match(newWord);
+    if (findWord == null) {
+        // up to this position (x, y), the word dont' exists
+        return;
+    }
+    // now cur is in a valid position, with a valid prefix
+    if (findWord.isWord()) {
+        ans.add(newWord);
+    }
+    // visit this position, and continue in 4 different directions
+    visited[x][y] = true;
+    findWordsDfs(ans, dict, map, visited, new Item(x, y - 1, newWord));
+    findWordsDfs(ans, dict, map, visited, new Item(x, y + 1, newWord));
+    findWordsDfs(ans, dict, map, visited, new Item(x - 1, y, newWord));
+    findWordsDfs(ans, dict, map, visited, new Item(x + 1, y, newWord));
+    visited[x][y] = false;
+}
+
+public static void main(String[] args) {
+    String[] rows = "eela,elps,weut,korn".split(",");
+    char[][] input = new char[4][4];
+    for (int i = 0; i < 4; i++) {
+        input[i] = rows[i].toCharArray();
+    }
+
+    // prepare test data
+    BoggleSolver solver = new BoggleSolver();
+    Trie dictionary = solver.buildTrie();
+    // start finding words
+    Set<String> set = solver.findWords(input, dictionary);
+    // present the result
+    System.out.println(set.size() + " words are found, they are: ");
+    for (String str : set) {
+        System.out.println(str);
+    }
+}
+
+class Item {
+    public final int x, y;
+    public final String prefix;
+
+    public Item(int row, int column, String prefix) {
+        this.x = row;
+        this.y = column;
+        this.prefix = prefix;
+    }
+}
+}
+Trie.java
+public class Trie {
+    private TrieNode root;
+public Trie() {
+    this.root = new TrieNode();
+}
+
+public void addWord(String word) {
+    TrieNode node = this.root;
+    for (char c : word.toCharArray()) {
+        node = node.addChild(c);
+        if (node == null)
+            return;
+    }
+    node.setWord(true);
+}
+
+public TrieNode match(String s) {
+    TrieNode node = this.root;
+    for (char c : s.toCharArray()) {
+        node = node.get(c);
+        if (node == null)
+            return null;
+    }
+    return node;
+}
+}
+TrieNode.java
+public class TrieNode {
+    private TrieNode[] children;
+    private boolean isWord = false;
+public TrieNode() {
+    this.children = new TrieNode[26];
+}
+
+public TrieNode addChild(char child) {
+    if (child < 'a' || child > 'z')
+        return null;
+
+    int offset = child - 'a';
+    if (this.children[offset] == null) {
+        this.children[offset] = new TrieNode();
+    }
+    return this.children[offset];
+}
+
+public boolean isWord() {
+    return isWord;
+}
+
+public void setWord(boolean isWord) {
+    this.isWord = isWord;
+}
+
+public TrieNode get(char c) {
+    int offset = c - 'a';
+    return this.children[offset];
+}
+}
+Posted by CodeMonkey    q-google, z-string-search
+« [CC150v4] 10.7 Ugly Numbers (Hamming numbers) [Fundamental] A-Star Search  »
+Comments
+Due to technical issue, comments have been disabled. Please email your questions to admin@shuatiblog.com
+Categories
+cc150v4 (34)
+cc150v5 (28)
+design (77)
+experience (4)
+fundamental (18)
+java oop (36)
+leetcode (177)
+leetcode_plus (9)
+lintcode (16)
+ninechap (25)
+q-facebook (9)
+q-google (63)
+question (133)
+testing (5)
+z-string-search (17)
+z-testing (2)
+z-top-k (6)
+Recent Posts
+[Question] Swizzle Sort
+[Design] Strategy design pattern
+[Question] Partition Problem (divide array into halves)
+[LeetCode 188] Best Time to Buy and Sell Stock IV
+[Java OOP] Java ArrayList implementation
+ Trie树的简单实现（Java版本）
+2013-03-30 12:06 435人阅读 评论(0) 收藏 举报
+ 分类：  面试（10）
+版权声明：本文为博主原创文章，未经博主允许不得转载。
+Trie树的用途很多，可以实现根据前缀补全等功能。
+在一个国外的博客上看到这个Java实现，比较简洁，个人修改了一下，增加了根据前缀删除和遍历的功能。
+Trie树节点类定义：
+[java] view plaincopy
+import java.util.*;
+/**
+
+A Trie Node
+*/
+class TrieNode {
+/**
+
+The key stored in this node if any.
+*/
+private String key;
+
+/**
+
+the outgoing edges of this node, implemented as a sorted map of character to the child node.
+*/
+private SortedMap edges;
+
+
+
+  TrieNode addEdge(char c) {
+    if (edges == null) {
+      edges = new TreeMap();
+    }
+    TrieNode childNode = new TrieNode();
+    edges.put(c, childNode);
+    return childNode;
+  }
+  TrieNode getNodeByEdge(char c) {
+    return (edges == null) ? null : edges.get(c);
+  }
+  TrieNode deleteEdge(char c) {
+    return (edges == null) ? null : edges.remove(c);
+  }
+  Iterator getChildren() {
+    return (edges == null) ? null : edges.values().iterator();
+  }
+  void setKey(String key) {
+    this.key = key;
+  }
+  String getKey() {
+    return key;
+  }
+  public int getChildrenCnt() {
+    return edges == null ? 0 : edges.size();
+  }
+}
+Trie树的操作：
+[java] view plaincopy
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+/**
+
+TRIE data structure supporting basic dictionary operations.
+*/
+public class Trie {
+private final TrieNode root;
+/**
+
+Creates a new empty TRIE object.
+*/
+public Trie() {
+root = new TrieNode();
+}
+
+
+
+  /**
+
+Inserts the specified key into this Trie object.
+@param key
+*/
+public void insert(String key) {
+TrieNode currNode = root;
+for (char c : key.toCharArray()) {
+ TrieNode child = currNode.getNodeByEdge(c);
+ if (child == null) {
+   currNode = currNode.addEdge(c);
+ } else {
+   currNode = child;
+ }
+}
+currNode.setKey(key);
+}
+/**
+
+Returns all the keys in the Trie which start with the specified prefix.
+@param prefix
+@return
+*/
+public List searchPrefix(String prefix) {
+TrieNode currNode = root;
+for (char c : prefix.toCharArray()) {
+ TrieNode child = currNode.getNodeByEdge(c);
+ if (child == null) {
+   return Collections.emptyList();
+ } else {
+   currNode = child;
+ }
+}
+List matches = new ArrayList();
+preorderTraverse(currNode, matches);
+return matches;
+}
+/**
+
+Delete all children below the specified prefix.
+@param prefix
+@return true if successful; false if prefix not found.
+*/
+public boolean deletePrefix(String prefix) {
+TrieNode currNode = root;
+TrieNode prevNode = root;
+char delFrom = ' ';
+for (char c : prefix.toCharArray()) {
+ TrieNode child = currNode.getNodeByEdge(c);
+ delFrom = c;
+ if (child == null) {
+   return false;
+ } else {
+   prevNode = currNode;
+   currNode = child;
+ }
+}
+prevNode.deleteEdge(delFrom);
+return true;
+}
+/**
+
+Does preorder traversal of Trie and add retrieved keys in the specified results list.
+@param currNode
+@param results
+*/
+private void preorderTraverse(TrieNode currNode, List results) {
+if (currNode.getKey() != null) {
+ results.add(currNode.getKey());
+}
+Iterator children = currNode.getChildren();
+if (children != null) {
+ while (children.hasNext()) {
+   preorderTraverse(children.next(), results);
+ }
+}
+}
+/**
+
+Does preorder traversal of Trie and print all keys.
+@param currNode
+@param results
+*/
+public void traverse() {
+preorderTraverse(root);
+}
+private void preorderTraverse(TrieNode root) {
+if (root.getKey() != null) {
+ System.out.println(root.getKey());
+}
+Iterator children = root.getChildren();
+if (children != null) {
+ while (children.hasNext()) {
+   preorderTraverse(children.next());
+ }
+}
+}
+
+  public static void main(String[] args) {
+    Trie t = new Trie();
+    t.insert("vino");
+    t.insert("vinod");
+    t.insert("vin");
+    t.insert("jyo");
+    t.insert("jyotsna");
+    t.insert("jyot");
+    t.insert("jyots");
+    t.insert("jyotsn");
+    t.insert("joe");
+System.out.println(t.searchPrefix("vin"));
+System.out.println(t.searchPrefix("j"));
+System.out.println(t.searchPrefix("jy"));
+System.out.println(t.searchPrefix("joe"));
+
+System.out.println(t.searchPrefix("bhalblah"));
+
+t.deletePrefix("vino");
+System.out.println(t.searchPrefix("v"));
+
+t.traverse();
+  }
+}

@@ -1,0 +1,4 @@
+﻿
+list don't forget missing head for dummy node
+don't duplicate the node  when you already processed temp 
+ node.right = dfs(temp.next)

@@ -1,0 +1,9 @@
+var externCrIds5300 = {};
+var scriptTags5300= [];
+var nonScriptTags5300= [];
+nonScriptTags5300.push({'isVisible': 'false' , 'tag': '<img border="0" src="https://tapestry.tapad.com/tapestry/1?ta_partner_id=1957&ta_partner_did=@@PREFID@@&ta_format=png">'
++ '<IMG SRC="http://hrblock.demdex.net/event?d_event=imp&d_src=48826&d_dpid=48826&d_dpuuid=@@PREFID@@&d_campaign=@@CAID@@&d_site=@@SIID@@&d_placement=@@PLID@@&d_adgroup=@@CR_GRP_ID@@&d_creative=@@CRID@@&d_bu=1&d_vert=1&d_tactic=1" WIDTH=1 HEIGHT=1 ALT=" " BORDER=0>', 'secureTag': '<img border="0" src="https://tapestry.tapad.com/tapestry/1?ta_partner_id=1957&ta_partner_did=@@PREFID@@&ta_format=png">'
++ '<IMG SRC="https://hrblock.demdex.net/event?d_event=imp&d_src=48826&d_dpid=48826&d_dpuuid=@@PREFID@@&d_campaign=@@CAID@@&d_site=@@SIID@@&d_placement=@@PLID@@&d_adgroup=@@CR_GRP_ID@@&d_creative=@@CRID@@&d_bu=1&d_vert=1&d_tactic=1" WIDTH=1 HEIGHT=1 ALT=" " BORDER=0>' });
+scriptTags5300.push({'isVisible': 'false' , 'tag': 'http://cdn.doubleverify.com/dvtp_src.js?ctx=2826712&cmp=@@CAID@@&sid=@@SIID@@&plc=@@PLID@@&num=&adid=&advid=852587&adsrv=63&region=30&btreg=@@CRID@@&btadsrv=webmedia.hrblock.com&crt=@@CRID@@&crtname=&chnl=&unit=&pid=&uid=&dvtagver=6.1.src', 'secureTag': '' });
+scriptTags5300.push({'isVisible': 'false' , 'tag': '', 'secureTag': 'https://cdn.doubleverify.com/dvtp_src.js?ctx=2826712&cmp=@@CAID@@&sid=@@SIID@@&plc=@@PLID@@&num=&adid=&advid=852587&adsrv=63&region=30&btreg=@@CRID@@&btadsrv=webmedia.hrblock.com&crt=@@CRID@@&crtname=&chnl=&unit=&pid=&uid=&dvtagver=6.1.src' });
+te_tags.AddTags(scriptTags5300, nonScriptTags5300, externCrIds5300);

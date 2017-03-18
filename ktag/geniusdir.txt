@@ -1,0 +1,4 @@
+map	map			0		Note
+tag	tag			0		Note
+map	map			0		Note
+tag	tag			0		Note

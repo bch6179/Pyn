@@ -1,0 +1,13 @@
+ 1.         #Note : Change cur next pointer to next unique one or Null, 
+        #       change cur to that one as new iteration point and repeat
+        
+  #Mistake prefer looking backward let next iteration start node be the non duplicated one which is p or null; instead of pointing head to next of head.
+     // [1 1 1] last 1 head== null, and you goback to check head.next , exception
+  
+ 2.
+ #===== Inner while checking duplicates help to handle the last duplicates by setting tale to null
+  however, not for one unique while. special handling
+
+ 3.
+ p = head.next.next don't set p unless it's already reflected in the head.next 
+ if you use a variable, make sure the change and reset works

@@ -1,0 +1,26 @@
+Suppose we see a sequence of items, one at a time. We want to keep a single item in memory, and we want it to be selected at random from the sequence. If we know the total number of items (n), then the solution is easy: select an index i between 1 and n with equal probability, and keep the i-th element. The problem is that we do not always know n in advance. A possible solution is the following:
+Keep the first item in memory.
+When the i-th item arrives (for {\displaystyle i>1} i>1):
+with probability {\displaystyle 1/i} 1/i, keep the new item (discard the old one)
+with probability {\displaystyle 1-1/i} {\displaystyle 1-1/i}, keep the old item (ignore the new one)
+So:
+when there is only one item, it is kept with probability 1;
+when there are 2 items, each of them is kept with probability 1/2;
+when there are 3 items, the third item is kept with probability 1/3, and each of the previous 2 items is also kept with probability (1/2)(1-1/3) = (1/2)(2/3) = 1/3;
+by induction, it is easy to prove that when there are n items, each item is kept with probability 1/n.
+Algorithm R[edit]
+The most common example was labelled Algorithm R by Jeffrey Vitter in his paper on the subject.[1] This simple O(n) algorithm as described in the Dictionary of Algorithms and Data Structures[2] consists of the following steps (assuming k < s and using one-based array indexing):
+(*
+  S has items to sample, R will contain the result
+ *)
+ReservoirSample(S[1..n], R[1..k])
+  // fill the reservoir array
+  for i = 1 to k
+      R[i] := S[i]
+
+  // replace elements with gradually decreasing probability
+  for i = k+1 to n
+    j := random(1, i)   // important: inclusive range
+    if j <= k
+        R[j] := S[i]
+The algorithm creates a "reservoir" array of size k and populates it with the first k items of S. It then iterates through the remaining elements of S until S is exhausted. At the ith element of S, the algorithm generates a random number j between 1 and i. If j is less than or equal to k, the jth element of the reservoir array is replaced with the ith element of S. In effect, for all i, the ith element of S is chosen to be included in the reservoir with probability k/i. Similarly, at each iteration the jth element of the reservoir array is chosen to be replaced with probability 1/k * k/i, which simplifies to 1/i. It can be shown that when the algorithm has finished executing, each item in S has equal probability (i.e. k/length(S)) of being chosen for the reservoir. To see this, consider the following proof by induction. After the (i-1)th round, let us assume, the probability of a number being in the reservoir array is k/(i-1). Since the probability of the number being replaced in the ith round is 1/i, the probability that it survives the ith round is (i-1)/i. Thus, the probability that a given number is in the reservoir after the ith round is the product of these two probabilities, i.e. the probability of being in the reservoir after the (i-1)th round, and surviving replacement in the ith round. This is (k/(i-1)) * ((i-1)/i)=k/i. Hence, the result holds for i, and is therefore true by induction.
