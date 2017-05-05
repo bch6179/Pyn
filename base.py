@@ -8,7 +8,7 @@ class ListNode:
     def __repr__(self):
         return """ListNode(val=%r, next=%r""" % (self.val, self.next)
 class Node:
-    def __init__(self, val):
+    def __init__(self, val, tnext):
         self.val = val
         self.next = tnext
     def __repr__(self):

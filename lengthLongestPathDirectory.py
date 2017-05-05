@@ -38,14 +38,14 @@
 # Notice that a/aa/aaa/file1.txt is not the longest file path, if there is another path aaaaaaaaaaaaaaaaaaaaa/sth.png.
 # The number of tabs is my depth and for each depth I store the current path length.
 
-def lengthLongestPath(self, input):
-    maxlen = 0
-    pathlen = {0: 0}
-    for line in input.splitlines():
-        name = line.lstrip('\t')
-        depth = len(line) - len(name)
-        if '.' in name:
-            maxlen = max(maxlen, pathlen[depth] + len(name))
-        else:
-            pathlen[depth + 1] = pathlen[depth] + len(name) + 1
-    return maxlen
+    def lengthLongestPath(self, input):
+        maxlen = 0
+        pathlen = {0: 0}
+        for line in input.splitlines():
+            name = line.lstrip('\t')
+            depth = len(line) - len(name)
+            if '.' in name:
+                maxlen = max(maxlen, pathlen[depth] + len(name))
+            else:
+                pathlen[depth + 1] = pathlen[depth] + len(name) + 1
+        return maxlen

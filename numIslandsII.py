@@ -1,10 +1,54 @@
-  he algorithm runs in O((M+N) log* N) where M is the number of operations ( unite and find ), N is the number of objects, log* is iterated logarithm while the naive runs in O(MN).
+# 305. Number of Islands II Add to List
+# DescriptionSubmissionsSolutions
+# Total Accepted: 19796
+# Total Submissions: 51365
+# Difficulty: Hard
+# Contributors: Admin
+# A 2d grid map of m rows and n columns is initially filled with water. We may perform an addLand operation which turns the water at position (row, col) into a land. Given a list of positions to operate, count the number of islands after each addLand operation. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+# Example:
+
+# Given m = 3, n = 3, positions = [[0,0], [0,1], [1,2], [2,1]].
+# Initially, the 2d grid grid is filled with water. (Assume 0 represents water and 1 represents land).
+
+# 0 0 0
+# 0 0 0
+# 0 0 0
+# Operation #1: addLand(0, 0) turns the water at grid[0][0] into a land.
+
+# 1 0 0
+# 0 0 0   Number of islands = 1
+# 0 0 0
+# Operation #2: addLand(0, 1) turns the water at grid[0][1] into a land.
+
+# 1 1 0
+# 0 0 0   Number of islands = 1
+# 0 0 0
+# Operation #3: addLand(1, 2) turns the water at grid[1][2] into a land.
+
+# 1 1 0
+# 0 0 1   Number of islands = 2
+# 0 0 0
+# Operation #4: addLand(2, 1) turns the water at grid[2][1] into a land.
+
+# 1 1 0
+# 0 0 1   Number of islands = 3
+# 0 1 0
+# We return the result as an array: [1, 1, 2, 3]
+
+# Challenge:
+
+# Can you do it in time complexity O(k log mn), where k is the length of the positions?
+
+
+  The algorithm runs in O((M+N) log* N) where M is the number of operations ( unite and find ), N is the number of objects, log* is iterated logarithm while the naive runs in O(MN).
 
 For our problem, If there are N positions, then there are O(N) operations and N objects then total is O(N log*N), when we don't consider the O(mn) for array initialization.
 log2(2^65536) = 65536 = 2^16
 log2(65536) = 16
 log2(16) = 4
 log2(4) = 2
+3
 log2(2) = 1
 So log*(2^65536) = 5.
 ave the same concern as you. In Introduction to Algorithm, they use weighting (or more precisely, rank) as the height of tree. Here, the size of the set is used.
@@ -177,7 +221,10 @@ def numIslands2(self, m, n, positions):
                 count -= union(x, y)
         counts.append(count)
     return counts
-
+Starting from an empty data structure, any sequence
+of M union and find operations on N objects takes O(N + M lg* N) time.
+• Proof is very difficult.
+• But the algorithm is still simple!
      island has a main position. For a position p of some island, main[p] tells that main position. And for a main position p, land[p] tells all positions of that island. When combining islands, always add the smaller to the larger. I think this makes it O(P log P), where P is the number of positions. With about 230 ms, it is a bit faster than my union+find solutions.
 
 def numIslands2(self, m, n, positions):

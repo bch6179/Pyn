@@ -1,3 +1,4 @@
+https://leetcode.com/problems/flatten-2d-vector/#/description
 [LeetCode] Flatten 2D Vector 压平二维向量
  
 

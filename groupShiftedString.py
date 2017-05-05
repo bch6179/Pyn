@@ -14,7 +14,7 @@
 #   ["a","z"]
 # ]
 
-# ython with groupby
+# Python with groupby
 import itertools
 class Solution():
     def groupStrings(self, strings):

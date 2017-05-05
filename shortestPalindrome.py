@@ -1,4 +1,13 @@
-Give a string s, by adding prefix to s, get the shortest palindrome
+https://leetcode.com/problems/shortest-palindrome/#/description
+
+Given a string S, you are allowed to convert it to a palindrome by adding characters in front of it. Find and return the shortest palindrome you can find by performing this transformation.
+
+For example:
+
+Given "aacecaaa", return "aaacecaaa".
+
+Given "abcd", return "dcbabcd".
+
 
 KMP apply to this: 相当于在除去字符D(the first difference)的模式串子串中寻找相同的前缀和后缀，然后根据前缀后缀求出next 数组，最后基于next 数组进行匹配. by getting next tables,so we always get the max matching prefix and sufix, while we extending the end to the left of the merged abc#cba; if the last char not matching its next is 0; for each i as the last end, get the next table and DP
 

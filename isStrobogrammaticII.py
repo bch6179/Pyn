@@ -148,3 +148,26 @@ def findStrobogrammatic(self, n):
 
         validNums='0186969810' if zero else '18696981'
         return [validNums[i]+stg+validNums[-i-1] for i in xrange(len(validNums)/2) for stg in self.findStrobogrammatic(n-2, True)]
+
+
+ nums = n%2 * list('018') or ['']
+        
+        while n > 1:
+            n = n-2  # put this ealier to solve the dillma of 4 and 2
+            nums = [a+g+b for a,b in '00 11 88 69 96'.split()[n<2:] for g in nums]
+         
+        return nums
+        
+    def findStrobogrammatic1(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        def dfs(m,n):
+            if m == 0: return ['']
+            if m == 1: return list('018')
+            
+            return [ a+g+b for a,b in '00 11 88 69 96'.split()[m==n:] for g in dfs(m-2, n) ]
+            
+        if n == 0: return []
+        return dfs(n,n)

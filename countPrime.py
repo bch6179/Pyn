@@ -69,3 +69,10 @@ public int countPrimes(int n) {
 
 # ']
 # }
+https://www.youtube.com/watch?v=eKp56OLhoQshttps://www.youtube.com/watch?v=eKp56OLhoQs
+trial division
+O(n root of n)
+sieve of eratosthenes
+a number of n bits is prime can be done in polynomial in nn, see the AKS test (it's somewhat heavy going).
+
+O(nloglogn) n/2+n/3+n/4

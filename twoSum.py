@@ -1,4 +1,26 @@
 class Solution(object):
+        def twoSumNorSorted(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        start = 0
+        end = len(nums)-1
+        pairs = []
+        for i,n in enumerate(nums):
+            pairs.append((n,i))
+        nums = sorted(pairs)
+        while start < end:
+            sum = nums[start][0] + nums[end][0]
+            if sum < target:
+                start += 1
+            elif sum > target:
+                end -= 1
+            else:
+                return [nums[start][1],nums[end][1]]
+        return [-1,-1]
+
     def twoSum(self, nums, target):
         nums.sort()
         start, end = 0, len(nums)-1

@@ -69,7 +69,7 @@ class Solution(object):
 #             nums[l], nums[low] = nums[low], nums[l]
 #             low += 1
 #         l += 1
-#     nums[low], nums[r] = nums[r], nums[low]
+#     nums[low],      nums[r] = nums[r], nums[low]
 #     return low
 
 # def findKthLargest(self, nums, k):

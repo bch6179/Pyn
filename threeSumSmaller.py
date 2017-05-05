@@ -1,3 +1,15 @@
+# https://leetcode.com/problems/3sum-smaller/#/description
+# ven an array of n integers nums and a target, find the number of index triplets i, j, k with 0 <= i < j < k < n that satisfy the condition nums[i] + nums[j] + nums[k] < target.
+
+# For example, given nums = [-2, 0, 1, 3], and target = 2.
+
+# Return 2. Because there are two triplets which sums are less than 2:
+
+# [-2, 0, 1]
+# [-2, 0, 3]
+# Follow up:
+# Could you solve it in O(n2) runtime?
+
 class Solution(object):
     def threeSumSmallerMyBad(self, nums, target):
         """
@@ -19,7 +31,8 @@ class Solution(object):
                 else: # don't know how to solve two dimisions
                     res += 1
                     end -= 1
-After sorting, if i, j, k is a valid triple, then i, j-1, k, ..., i, i+1, k are also valid triples. No need to count them one by one.
+After sorting, if i, 
+-
 
 def threeSumSmaller(self, nums, target):
     nums.sort()

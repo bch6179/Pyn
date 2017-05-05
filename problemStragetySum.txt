@@ -1,0 +1,14 @@
+isValidProblem: fasan for analyzing different cases, tight on implementation 
+
+completeProlbem: relax on requirement first and then add constrain; convert to isValidProblem subproblems and resolve
+
+dig the assumption you made and explore other optimal assumption if has to be made then verify , or the actual property as shortcut which can be identified by drawing from different cases , like alien order , the assumption is wer, wrt, get the oder from in-word, but not intra word, that lead to incorrect result
+
+complexProblem: select each to AG
+
+canProblem
+
+HardProblem no hint: hashmap , bit, math ,D&D (transfer to ordered data to do merge), setup model comes into play to transform the problem
+
+Infinite problem:
+Instead of a two-dimensional array of ones and zeros, I represent the board as a set of live cell coordinates.

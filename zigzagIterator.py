@@ -168,6 +168,7 @@ class ZigzagIterator(object):
         self.n -= 1
         return next(self.vals)
 
+
     def hasNext(self):
         return self.n > 0
 ere's a 8 lines solution for the original question. Since we only saved iterators, space is O(1):

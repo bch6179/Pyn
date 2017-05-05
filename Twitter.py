@@ -3,6 +3,7 @@ https://leetcode.com/problems/design-twitter/#/description
 Design a simplified version of Twitter where users can post tweets, follow/unfollow another user and is able to see the 10 most recent tweets in the user's news feed. Your design should support the following methods:
 
 postTweet(userId, tweetId): Compose a new tweet.
+
 getNewsFeed(userId): Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent.
 follow(followerId, followeeId): Follower follows a followee.
 unfollow(followerId, followeeId): Follower unfollows a followee.
@@ -54,6 +55,86 @@ class Twitter(object):
     def unfollow(self, followerId, followeeId):
         self.followees[followerId].discard(followeeId)
 
+            def merge(self, qList):
+            q = []
+        res = [] 
+        for p in qList:
+            time, t = p[0]
+            q.append((time, t , 0, p))
+            
+        heapq.heapify(q)
+        
+        for _ in range(10):
+            if q:
+                _, t , idx, p = heapq.heappop(q)
+                res.append(t)
+                if idx < len(p)-1:
+                    time, t = p[idx+1]
+                    heapq.heappush(q, (time, t, idx+1, p))
+        return res
+                    
+            
+    def getNewsFeed2(self, userId):
+        relatedTweets = [self.tweets[i] for i in(self.followers[userId] | {userId}) if self.tweets[i]]
+        news = self.merge(relatedTweets)
+         
+        return news
+class Node:
+    def __init__(self, data, next=None):
+        self.val = data
+        self.next = next
+class LinkedList:
+    def __init__(self, node=None):
+        self.head = node
+    def getHead(self):
+        return self.head 
+    def insert(self, val):
+        t = Node(val)
+        t.next = self.head
+        self.head = t
+    def merge(self, qList):
+        q = []
+        res = [] 
+        for p in qList:
+            time, t = p.val
+            q.append((time, t , p.next))
+            
+        heapq.heapify(q)
+        
+        for _ in range(10):
+            if q:
+                _, t , p = heapq.heappop(q)
+                res.append(t)
+                if p:
+                    time, t = p.val
+                    heapq.heappush(q, (time, t, p.next))
+        return res
+                    
+            
+    def getNewsFeed(self, userId):
+        relatedTweets = [self.tweets[i].getHead() for i in(self.followers[userId] | {userId}) if self.tweets[i] and self.tweets[i].getHead()]
+        news = self.merge(relatedTweets)
+         
+        return news
+
+    
+    def merge(self, qList):
+        q = []
+        res = [] 
+        for p in qList:
+            time, t = p.val
+            q.append((p.val , p.next))
+            
+        heapq.heapify(q)
+        
+        for _ in range(10):
+            if q:
+                t , p = heapq.heappop(q)
+                res.append(t[1])
+                if p:
+                    
+                    heapq.heappush(q, (p.val, p.next))
+        return res
  . You could've used a heap in which you store only the heads and then do 10 extractions (similar to what we do when we merge k sorted linked lists. Check out https://leetcode.com/discuss/108303/simple-and-clean-python-code-o-logk-for-getting-news-feed, but I am sure you already noticed that. Beautiful code, as always.
 
  heapq.merge(): "Merge multiple sorted inputs into a single sorted output (for example, merge timestamped entries from multiple log files). Returns an iterator over the sorted values."

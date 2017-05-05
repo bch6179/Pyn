@@ -1,3 +1,20 @@
+      def groupAnagrams(self, strs):
+            """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        dict = collections.defaultdict(list)
+        
+        for s in strs:
+            key = ''.join(sorted(s))
+            dict[key].append(s)
+        
+        res  = []
+        for v in dict.itervalues():
+            res.append(v)
+        
+        return res
+        
     def groupAnagrams(self, strs):
         # write your code here
         dict = {}

@@ -8,7 +8,27 @@ Reputation:  72
 Solution
 
 Sparse Matrix Multiplication https://leetcode.com/problems/sparse-matrix-multiplication/
+ ven two sparse matrices A and B, return the result of AB.
 
+You may assume that A's column number is equal to B's row number.
+
+Example:
+
+A = [
+  [ 1, 0, 0],
+  [-1, 0, 3]
+]
+
+B = [
+  [ 7, 0, 0 ],
+  [ 0, 0, 0 ],
+  [ 0, 0, 1 ]
+]
+
+
+     |  1 0 0 |   | 7 0 0 |   |  7 0 0 |
+AB = | -1 0 3 | x | 0 0 0 | = | -7 0 3 |
+                  | 0 0 1 |   
 Algorithm
 
 Preprocess matrix A to produce a dictionary cache such that cache[i] = [j1,j2,j3] such that A[i,j1] is not zero. Then use this cache while doing dot product of row of A with column of B so that only non zero values of A are multiplied.
@@ -111,8 +131,8 @@ public int[][] multiply(int[][] A, int[][] B) {
                 int valB = B[colA][j];
                 result[i][j] +=valA * valB;
 
-                def multiply(self, A, B):
-        cols = [[(j, b) for j, b in enumerate(col) if b]
+def multiply(self, A, B):
+    cols = [[(j, b) for j, b in enumerate(col) if b]
             for col in zip(*B)]
     return [[sum(row[j]*b for j, b in col)
              for col in cols]

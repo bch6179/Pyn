@@ -11,7 +11,22 @@ What is the minimum candies you must give?
 Subscribe to see which companies asked this question.
 
 Hide Tags
+e first one is O(n) space, but very concise. The idea is to find the mininum candies for each child considering only left or right neighbors.
 
+class Solution:
+# @param ratings, a list of integer
+# @return an integer
+def candy(self, ratings):
+    candies = [1] * len(ratings)
+    for i in xrange(len(ratings) - 1):
+        if ratings[i + 1] > ratings[i]:
+            candies[i + 1] = max(candies[i + 1], candies[i] + 1)
+            
+        j = -i - 1
+        if ratings[j - 1] > ratings[j]: 
+            candies[j - 1] = max(candies[j - 1], candies[j] + 1)
+    
+    return sum(candies)
 public int candy(int[] ratings) {
     int candies[] = new int[ratings.length];        
     Arrays.fill(candies, 1);// Give each child 1 candy 
